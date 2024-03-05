@@ -32,7 +32,31 @@ let capsEntries = entries.map((entry) => [
 ]);
 sequelize.models = Object.fromEntries(capsEntries);
 
-const { User } = sequelize.models;
+const { Usuario,Tarea,Sprint,Sala,ProyectoScrum,ProductBacklog,Mensaje,HistoriaUsuario } = sequelize.models;
+
+Usuario.belongsToMany(Sala, { through: 'SalaUsuario' });
+Sala.belongsToMany(Usuario, { through: 'SalaUsuario' });
+
+Sala.hasMany(Mensaje,{foreignKey:'sala_id'});
+Mensaje.belongsTo(Sala,{foreignKey:'sala_id'});
+
+Usuario.hasMany(Mensaje, { foreignKey: 'usuario_id' });
+Mensaje.belongsTo(Usuario, { foreignKey: 'usuario_id' });
+
+Usuario.hasMany(ProyectoScrum);
+ProyectoScrum.belongsTo(Usuario);
+
+ProyectoScrum.hasMany(Sprint);
+Sprint.belongsTo(ProyectoScrum);
+
+ProyectoScrum.hasMany(ProductBacklog);
+ProductBacklog.belongsTo(ProyectoScrum);
+
+ProductBacklog.hasMany(HistoriaUsuario);
+HistoriaUsuario.belongsTo(ProductBacklog);
+
+HistoriaUsuario.hasMany(Tarea);
+Tarea.belongsTo(HistoriaUsuario);
 
 module.exports = {
   ...sequelize.models,
