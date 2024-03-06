@@ -4,6 +4,7 @@ import { HomeScreen } from "./Screen/HomeScreen";
 import { LoginScreen } from "./Screen/LoginScreen";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { RegisterScreen } from "./Screen/RegisterScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -27,7 +28,11 @@ const Navigation = () => {
           component={HomeScreen}
           options={{ headerShown: true }}
         />
-        
+        <Stack.Screen
+          name="register"
+          component={RegisterScreen}
+          options={{ headerShown: false }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

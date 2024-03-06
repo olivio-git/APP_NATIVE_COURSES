@@ -1,37 +1,67 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View, TextInput, Pressable, Image, Alert } from "react-native";
+import { Picker } from "@react-native-picker/picker";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  Pressable,
+  Image,
+} from "react-native";
 import GoogleIcon from '../../assets/google.png';
 import GitHubIcon from '../../assets/git.png';
 import { useNavigation } from "@react-navigation/native";
-import { handleLoginUserFetch } from "../utils/fetchReq";
+import { handleRegisterUserFetch } from "../utils/fetchReq";
+import { Alert } from 'react-native';
 
-export const LoginScreen = () => {
+
+export const RegisterScreen = () => {
   const navigate = useNavigation();
   const [user, setUser] = useState({
-    email: "",
-    password: ""
-  });
+    nombre:"",
+    apellidos:"",
+    telefono:"",
+    semestre:0,
+    email:"",
+    password:""
+  }); 
   const handleChange = (property) => (value) => {
-    setUser((prevUser) => ({ ...prevUser, [property]: value }))
+    setUser((prevUser)=> ({...prevUser, [property]:value})) 
   }
-  const handleLogin = async () => {
-    const response = await handleLoginUserFetch(user);
-    Alert.alert("Exito!", "Usuario logeado exitosamente!");
-    navigate.navigate('home');
+  const handleLogin = () => {
+    navigate.goBack();
   };
-  const handleRegister = () => {
-    navigate.navigate('register')
+  const handleRegister = async () => {
+    const response = await handleRegisterUserFetch(user);
+    Alert.alert(
+      "Éxito!",
+      `Usuario creado exitosamente!`
+    );
+    navigate.goBack();
   };
-  const handleLoguinGoogle = () => {
-
-  };
-  const handleLoginGitHub = () => {
-
-  };
+  
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Iniciar sesión</Text>
+      <Text style={styles.title}>Registro</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Nombres"
+        onChangeText={handleChange("nombre")}
+        value={user.nombre}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Apellidos"
+        onChangeText={handleChange("apellidos")}
+        value={user.apellidos}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Telefono"
+        onChangeText={handleChange("telefono")}
+        value={user.telefono}
+      />
       <TextInput
         style={styles.input}
         placeholder="Correo electrónico"
@@ -45,21 +75,30 @@ export const LoginScreen = () => {
         onChangeText={handleChange("password")}
         value={user.password}
       />
-      <Pressable style={styles.button} title="Ingresar" onPress={handleLogin}>
-        <Text style={styles.text}>Iniciar sesión</Text>
+      <Picker
+        selectedValue={user.semestre}
+        style={styles.picker}
+        onValueChange={(itemValue) => handleChange("semestre")(itemValue)}
+      > 
+        {Array.from({ length: 9 }, (_, i) => i + 1).map((value) => (
+          <Picker.Item key={value} label={`Semestre ${value}`} value={value} />
+        ))}
+      </Picker>
+      <Pressable style={styles.button} title="Ingresar" onPress={handleRegister}>
+        <Text style={styles.text}>Crear cuenta</Text>
       </Pressable>
       <View style={styles.buttonCrearCuenta}>
         <Pressable
           style={styles.buttonGoogle}
-          onPress={handleRegister}
+          onPress={handleLogin}
         >
-          <Text>Crear cuentas</Text>
+          <Text>Iniciar sesión</Text>
         </Pressable>
       </View>
       <View style={styles.buttonContainer}>
         <Pressable
           style={styles.buttonGoogle}
-          onPress={handleLoguinGoogle}
+          onPress={handleLogin}
         >
           <Image source={GoogleIcon} style={styles.googleIcon} />
           <Text>Ingresar con Google</Text>
@@ -71,13 +110,14 @@ export const LoginScreen = () => {
       <View style={styles.buttonContainer}>
         <Pressable
           style={styles.buttonGoogle}
-          onPress={handleLoginGitHub}
+          onPress={handleLogin}
         >
           <Image source={GitHubIcon} style={styles.googleIcon} />
           <Text>GitHub</Text>
         </Pressable>
       </View>
     </View>
+      
   );
 };
 
@@ -86,8 +126,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     paddingHorizontal: 10,
-    paddingTop: 50,
-    gap: 4
+    paddingTop:50,
+    gap:4
   },
   title: {
     fontSize: 24,
@@ -134,7 +174,7 @@ const styles = StyleSheet.create({
   },
   buttonCrearCuenta: {
     width: '100%',
-    marginTop: 20 // Asegura que el contenedor ocupe todo el ancho disponible
+    marginTop:20 // Asegura que el contenedor ocupe todo el ancho disponible
   },
   buttonContainer: {
     width: '100%', // Asegura que el contenedor ocupe todo el ancho disponible

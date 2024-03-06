@@ -24,6 +24,10 @@ module.exports = (sequelize) => {
         type:DataTypes.TEXT,
         allowNull:false
     },
+    semestre:{
+        type:DataTypes.STRING,
+        allowNull:false
+    },
     correo:{
         type:DataTypes.STRING,
         allowNull:false
