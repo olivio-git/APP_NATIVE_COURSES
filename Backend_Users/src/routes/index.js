@@ -1,10 +1,7 @@
-const {Router} = require('express');
-
+const {Router} = require('express'); 
+const userRoutes = require('./usuarioRoutes');
 const router = Router();
 
-router.get('/getbyid/:id',(req,res)=>{
-    console.log(req.params.id);
-    res.status(200).send('<h1>HOLA USERS PROXY</h1>')
-})
+router.use('/user',userRoutes)
 
 module.exports = router;
